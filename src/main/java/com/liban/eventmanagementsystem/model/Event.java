@@ -1,5 +1,6 @@
 package com.liban.eventmanagementsystem.model;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -13,6 +14,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Entity
+@Table(name = "events")
 public class Event extends BaseEntity {
 
     private String title;
@@ -25,9 +28,11 @@ public class Event extends BaseEntity {
     private int capacity;
     private String status;
 
+    @OneToMany(mappedBy = "event")
     private Set<Registration> registrations =  new HashSet<>();
 
-
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User createdBy;
 
     @Override
