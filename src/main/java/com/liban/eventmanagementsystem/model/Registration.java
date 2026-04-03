@@ -1,5 +1,9 @@
 package com.liban.eventmanagementsystem.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -11,17 +15,20 @@ import java.util.Objects;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Registration extends BaseEntity {
+@Entity
+@Table(name = "registrations")
+public class Registration extends Person {
 
     private LocalDate registrationDate;
     private String status;
 
-    private String regisFirstName;
-    private String regisLastName;
-    private String regisEmail;
 
+    @ManyToOne
+    @JoinColumn(name = "event_id")
     private Event event;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Override

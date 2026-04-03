@@ -1,5 +1,6 @@
 package com.liban.eventmanagementsystem.model;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
@@ -11,16 +12,19 @@ import java.util.Set;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+@Entity
+@Table(name = "users")
+public class User extends Person {
 
-    private Long id;
-
-    private String name;
-    private String email;
+    private String username;
     private String password;
 
-    private Set<Role> roles =  new HashSet<Role>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles =  new HashSet<>();
 
+    @OneToMany(mappedBy = "createdBy")
     private Set<Event> events = new HashSet<>();
 
     @Override
