@@ -1,15 +1,59 @@
 package com.liban.eventmanagementsystem.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.liban.eventmanagementsystem.auth.UserPrincipal;
+import com.liban.eventmanagementsystem.model.Event;
+import com.liban.eventmanagementsystem.model.User;
+import com.liban.eventmanagementsystem.repository.EventRepository;
+import com.liban.eventmanagementsystem.services.EventService;
+import com.liban.eventmanagementsystem.services.UserServices;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/event")
+@RequestMapping("/api/events")
+@RequiredArgsConstructor
 public class EventController {
 
-    @GetMapping("/")
-    public String index(){
-        return "Welcome to our event management system!";
+    private final EventService eventService;
+
+    @GetMapping("")
+    @ResponseStatus(HttpStatus.OK)
+    public Set<Event> findAll() {
+        return eventService.getEvents();
     }
+
+    @GetMapping("/{event_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Event getEvent(@PathVariable UUID event_id) {
+        return eventService.getById(event_id);
+    }
+
+    @PostMapping("")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ORGANIZER')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Event createEvent(@RequestBody Event event) {
+        return eventService.save(event);
+    }
+
+    @PutMapping("/{event_id}/edit")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ORGANIZER')")
+    public Event updateEvent(@PathVariable UUID event_id, @RequestBody Event event) {
+        event.setId(event_id);
+        return eventService.update(event);
+    }
+
+    @DeleteMapping("/{event_id}/delete")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteEvent(@PathVariable UUID event_id) {
+        eventService.deleteById(event_id);
+    }
+
+
 }

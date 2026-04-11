@@ -1,5 +1,6 @@
 package com.liban.eventmanagementsystem.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,9 +21,17 @@ public class Event extends BaseEntity {
 
     private String title;
     private String description;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate startDate;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate endDate;
+
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime startTime;
+
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
     private String location;
     private int capacity;
