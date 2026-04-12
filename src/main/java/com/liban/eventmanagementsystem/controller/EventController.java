@@ -1,6 +1,8 @@
 package com.liban.eventmanagementsystem.controller;
 
 import com.liban.eventmanagementsystem.auth.UserPrincipal;
+import com.liban.eventmanagementsystem.dtos.request.EventRequestDTO;
+import com.liban.eventmanagementsystem.dtos.response.EventResponseDTO;
 import com.liban.eventmanagementsystem.model.Event;
 import com.liban.eventmanagementsystem.model.User;
 import com.liban.eventmanagementsystem.repository.EventRepository;
@@ -24,28 +26,29 @@ public class EventController {
 
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    public Set<Event> findAll() {
+    public Set<EventResponseDTO> findAll() {
         return eventService.getEvents();
     }
 
     @GetMapping("/{event_id}")
     @ResponseStatus(HttpStatus.OK)
-    public Event getEvent(@PathVariable UUID event_id) {
+    public EventResponseDTO getEvent(@PathVariable UUID event_id) {
         return eventService.getById(event_id);
     }
 
     @PostMapping("")
     @PreAuthorize("hasAnyRole('ADMIN', 'ORGANIZER')")
     @ResponseStatus(HttpStatus.CREATED)
-    public Event createEvent(@RequestBody Event event) {
-        return eventService.save(event);
+    public EventResponseDTO createEvent(@RequestBody EventRequestDTO eventRequestDTO) {
+        return eventService.save(eventRequestDTO);
     }
 
     @PutMapping("/{event_id}/edit")
     @PreAuthorize("hasAnyRole('ADMIN', 'ORGANIZER')")
-    public Event updateEvent(@PathVariable UUID event_id, @RequestBody Event event) {
-        event.setId(event_id);
-        return eventService.update(event);
+    public EventResponseDTO updateEvent(@PathVariable UUID event_id,
+                                        @RequestBody EventRequestDTO eventRequestDTO) {
+
+        return eventService.update(event_id, eventRequestDTO);
     }
 
     @DeleteMapping("/{event_id}/delete")

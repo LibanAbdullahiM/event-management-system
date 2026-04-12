@@ -1,6 +1,9 @@
 package com.liban.eventmanagementsystem.services;
 
 import com.liban.eventmanagementsystem.auth.UserPrincipal;
+import com.liban.eventmanagementsystem.dtos.request.RoleRequestDTO;
+import com.liban.eventmanagementsystem.dtos.request.UserRequestDTO;
+import com.liban.eventmanagementsystem.dtos.response.UserResponseDTO;
 import com.liban.eventmanagementsystem.model.Role;
 import com.liban.eventmanagementsystem.model.User;
 
@@ -10,9 +13,9 @@ import java.util.UUID;
 
 public interface UserServices {
 
-    User registerUser(User user);
+    UserResponseDTO registerUser(UserRequestDTO userRequestDTO);
 
-    User updateUser(User user);
+    UserResponseDTO updateUser(UUID user_id, UserRequestDTO userRequestDTO);
 
     void deleteUser(UUID user_id);
 
@@ -20,10 +23,10 @@ public interface UserServices {
 
     boolean usernameExists(String username);
 
-    User setRoleForUser(UUID user_id, Role role);
+    UserResponseDTO setRoleForUser(UUID user_id, RoleRequestDTO roleRequestDTO);
 
-    Set<User> getUsers();
+    Set<UserResponseDTO> getUsers();
 
-    User getUserById(UUID user_id);
+    UserResponseDTO getUserById(UUID user_id);
 
 }

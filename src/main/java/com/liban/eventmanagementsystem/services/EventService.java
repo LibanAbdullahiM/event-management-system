@@ -1,5 +1,7 @@
 package com.liban.eventmanagementsystem.services;
 
+import com.liban.eventmanagementsystem.dtos.request.EventRequestDTO;
+import com.liban.eventmanagementsystem.dtos.response.EventResponseDTO;
 import com.liban.eventmanagementsystem.model.Event;
 import com.liban.eventmanagementsystem.model.User;
 
@@ -8,15 +10,13 @@ import java.util.UUID;
 
 public interface EventService {
 
-    Set<Event> getEvents();
+    Set<EventResponseDTO> getEvents();
 
-    Event getById(UUID id);
+    EventResponseDTO getById(UUID id);
 
-    Event save(Event event);
+    EventResponseDTO save(EventRequestDTO eventRequestDTO);
 
-    Event update(Event event);
+    EventResponseDTO update(UUID event_id, EventRequestDTO eventRequestDTO);
 
     void deleteById(UUID id);
-
-    void delete(Event event);
 }

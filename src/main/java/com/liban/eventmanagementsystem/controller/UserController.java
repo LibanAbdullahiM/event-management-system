@@ -1,5 +1,8 @@
 package com.liban.eventmanagementsystem.controller;
 
+import com.liban.eventmanagementsystem.dtos.request.RoleRequestDTO;
+import com.liban.eventmanagementsystem.dtos.request.UserRequestDTO;
+import com.liban.eventmanagementsystem.dtos.response.UserResponseDTO;
 import com.liban.eventmanagementsystem.model.Role;
 import com.liban.eventmanagementsystem.model.User;
 import com.liban.eventmanagementsystem.services.UserServices;
@@ -25,15 +28,15 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
+    public UserResponseDTO register(@RequestBody UserRequestDTO userRequestDTO) {
 
-        return userServices.registerUser(user);
+        return userServices.registerUser(userRequestDTO);
     }
 
     @PutMapping("/{user_id}/edit")
-    public User updateUser(@PathVariable UUID  user_id, @RequestBody User user) {
-        user.setId(user_id);
-        return userServices.updateUser(user);
+    public UserResponseDTO updateUser(@PathVariable UUID  user_id, @RequestBody UserRequestDTO userRequestDTO) {
+
+        return userServices.updateUser(user_id, userRequestDTO);
     }
 
     @DeleteMapping("/{user_id}/delete")
@@ -45,13 +48,13 @@ public class UserController {
 
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
-    public Set<User> getAllUsers() {
+    public Set<UserResponseDTO> getAllUsers() {
         return userServices.getUsers();
     }
 
     @GetMapping("/{user_id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public User getUserById(@PathVariable UUID user_id) {
+    public UserResponseDTO getUserById(@PathVariable UUID user_id) {
 
         return userServices.getUserById(user_id);
     }
@@ -59,8 +62,8 @@ public class UserController {
     @PostMapping("/{user_id}/set_role")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public User setRoleForUser(@PathVariable UUID  user_id,
-                               @RequestBody Role role) {
-        return userServices.setRoleForUser(user_id, role);
+    public UserResponseDTO setRoleForUser(@PathVariable UUID  user_id,
+                               @RequestBody RoleRequestDTO roleRequestDTO) {
+        return userServices.setRoleForUser(user_id, roleRequestDTO);
     }
 }

@@ -1,6 +1,9 @@
 package com.liban.eventmanagementsystem.services;
 
 import com.liban.eventmanagementsystem.auth.UserPrincipal;
+import com.liban.eventmanagementsystem.dtos.request.EventRequestDTO;
+import com.liban.eventmanagementsystem.dtos.response.EventResponseDTO;
+import com.liban.eventmanagementsystem.mapper.EventMapper;
 import com.liban.eventmanagementsystem.model.Event;
 import com.liban.eventmanagementsystem.model.User;
 import com.liban.eventmanagementsystem.repository.EventRepository;
@@ -19,29 +22,41 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
+    private final EventMapper eventMapper;
 
-    public EventServiceImpl(EventRepository eventRepository) {
+    public EventServiceImpl(EventRepository eventRepository,
+                            EventMapper eventMapper) {
         this.eventRepository = eventRepository;
+        this.eventMapper = eventMapper;
     }
 
     @Override
-    public Set<Event> getEvents() {
-        return new HashSet<>(eventRepository.findAll());
+    public Set<EventResponseDTO> getEvents() {
+
+        Set<Event> events = new HashSet<>(eventRepository.findAll());
+
+        Set<EventResponseDTO> eventResponseDTOS = new HashSet<>();
+
+        for (Event event : events) {
+            eventResponseDTOS.add(eventMapper.toEventResponseDTO(event));
+        }
+
+        return eventResponseDTOS;
     }
 
     @Override
-    public Event getById(UUID id) {
+    public EventResponseDTO getById(UUID id) {
         Optional<Event> optionalEvent = eventRepository.findById(id);
 
         if(optionalEvent.isEmpty()) {
             throw new RuntimeException("Event not found");
         }
 
-        return optionalEvent.get();
+        return eventMapper.toEventResponseDTO(optionalEvent.get());
     }
 
     @Override
-    public Event save(Event event) {
+    public EventResponseDTO save(EventRequestDTO eventRequestDTO) {
 
         Authentication authentication = SecurityContextHolder
                 .getContext()
@@ -50,13 +65,18 @@ public class EventServiceImpl implements EventService {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         User user = userPrincipal.getUser();
 
-        event.setCreatedBy(user);
+        Event event = eventMapper.toEvent(eventRequestDTO);
 
-        return eventRepository.save(event);
+        event.setCreatedBy(user);
+        event.setStatus("Open");
+
+        return eventMapper.toEventResponseDTO(eventRepository.save(event));
     }
 
     @Override
-    public Event update(Event event) {
+    public EventResponseDTO update(UUID event_id, EventRequestDTO eventRequestDTO) {
+
+        Event event = eventRepository.findById(event_id).orElse(null);
 
         Authentication authentication = SecurityContextHolder
                 .getContext()
@@ -67,9 +87,6 @@ public class EventServiceImpl implements EventService {
 
         User created_user = event.getCreatedBy();
 
-        System.out.println("createdUser");
-        System.out.println(created_user);
-
         if(!user.equals(created_user)) {
             try {
                 throw new IllegalAccessException("You are not allowed to update this event");
@@ -78,16 +95,20 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        return eventRepository.save(event);
+        event.setTitle(eventRequestDTO.getTitle());
+        event.setDescription(eventRequestDTO.getDescription());
+        event.setStartDate(eventRequestDTO.getStartDate());
+        event.setEndDate(eventRequestDTO.getEndDate());
+        event.setStartTime(eventRequestDTO.getStartTime());
+        event.setEndTime(eventRequestDTO.getEndTime());
+        event.setLocation(eventRequestDTO.getLocation());
+        event.setCapacity(eventRequestDTO.getCapacity());
+
+        return eventMapper.toEventResponseDTO(eventRepository.save(event));
     }
 
     @Override
     public void deleteById(UUID id) {
         eventRepository.deleteById(id);
-    }
-
-    @Override
-    public void delete(Event event) {
-        eventRepository.delete(event);
     }
 }
