@@ -30,7 +30,19 @@ jobs:
             - ~/.m2
           key: maven-deps-{{ checksum "pom.xml" }}
 
-      - run: mvn clean verify
+      - run:
+          name: Wait for PostgreSQL to be ready
+          command: |
+            for i in {1..20}; do
+              nc -z localhost 5432 && echo "PostgreSQL is up!" && exit 0
+              echo "Waiting for PostgreSQL..."
+              sleep 2
+            done
+            echo "PostgreSQL failed to start in time" && exit 1
+
+      - run:
+          name: Run Tests and Build
+          command: mvn clean verify
 
 workflows:
   build_and_test:
