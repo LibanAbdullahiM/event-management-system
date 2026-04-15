@@ -6,6 +6,7 @@ import com.liban.eventmanagementsystem.dtos.response.UserResponseDTO;
 import com.liban.eventmanagementsystem.model.Role;
 import com.liban.eventmanagementsystem.model.User;
 import com.liban.eventmanagementsystem.services.UserServices;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,13 +29,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public UserResponseDTO register(@RequestBody UserRequestDTO userRequestDTO) {
+    public UserResponseDTO register(@Valid @RequestBody UserRequestDTO userRequestDTO) {
 
         return userServices.registerUser(userRequestDTO);
     }
 
     @PutMapping("/{user_id}/edit")
-    public UserResponseDTO updateUser(@PathVariable UUID  user_id, @RequestBody UserRequestDTO userRequestDTO) {
+    public UserResponseDTO updateUser(@PathVariable UUID  user_id,
+                                      @Valid @RequestBody UserRequestDTO userRequestDTO) {
 
         return userServices.updateUser(user_id, userRequestDTO);
     }

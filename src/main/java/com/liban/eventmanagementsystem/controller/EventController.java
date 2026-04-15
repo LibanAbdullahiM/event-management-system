@@ -8,6 +8,7 @@ import com.liban.eventmanagementsystem.model.User;
 import com.liban.eventmanagementsystem.repository.EventRepository;
 import com.liban.eventmanagementsystem.services.EventService;
 import com.liban.eventmanagementsystem.services.UserServices;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,14 +40,14 @@ public class EventController {
     @PostMapping("")
     @PreAuthorize("hasAnyRole('ADMIN', 'ORGANIZER')")
     @ResponseStatus(HttpStatus.CREATED)
-    public EventResponseDTO createEvent(@RequestBody EventRequestDTO eventRequestDTO) {
+    public EventResponseDTO createEvent(@Valid @RequestBody EventRequestDTO eventRequestDTO) {
         return eventService.save(eventRequestDTO);
     }
 
     @PutMapping("/{event_id}/edit")
     @PreAuthorize("hasAnyRole('ADMIN', 'ORGANIZER')")
     public EventResponseDTO updateEvent(@PathVariable UUID event_id,
-                                        @RequestBody EventRequestDTO eventRequestDTO) {
+                                        @Valid @RequestBody EventRequestDTO eventRequestDTO) {
 
         return eventService.update(event_id, eventRequestDTO);
     }

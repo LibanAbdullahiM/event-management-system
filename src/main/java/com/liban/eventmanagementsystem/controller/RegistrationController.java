@@ -3,6 +3,7 @@ package com.liban.eventmanagementsystem.controller;
 import com.liban.eventmanagementsystem.dtos.request.RegistrationRequestDTO;
 import com.liban.eventmanagementsystem.dtos.response.RegistrationResponseDTO;
 import com.liban.eventmanagementsystem.services.RegistrationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class RegistrationController {
     @PostMapping("/{event_id}/register")
     public RegistrationResponseDTO createRegistration(@PathVariable UUID user_id,
                                                       @PathVariable UUID event_id,
-                                                      @RequestBody RegistrationRequestDTO registrationRequestDTO) {
+                                                      @Valid @RequestBody RegistrationRequestDTO registrationRequestDTO) {
         registrationRequestDTO.setEvent_id(event_id);
         registrationRequestDTO.setUser_id(user_id);
 
