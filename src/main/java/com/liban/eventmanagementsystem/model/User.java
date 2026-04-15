@@ -27,6 +27,9 @@ public class User extends Person {
     @OneToMany(mappedBy = "createdBy")
     private Set<Event> events = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<Registration> registrations = new HashSet<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

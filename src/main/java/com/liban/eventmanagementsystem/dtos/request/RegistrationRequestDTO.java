@@ -2,11 +2,13 @@ package com.liban.eventmanagementsystem.dtos.request;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.UUID;
 
 @Getter
 @Setter
+@ToString
 public class RegistrationRequestDTO {
 
     private String firstName;
