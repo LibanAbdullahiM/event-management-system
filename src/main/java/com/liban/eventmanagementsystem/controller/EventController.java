@@ -8,6 +8,7 @@ import com.liban.eventmanagementsystem.model.User;
 import com.liban.eventmanagementsystem.repository.EventRepository;
 import com.liban.eventmanagementsystem.services.EventService;
 import com.liban.eventmanagementsystem.services.UserServices;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,18 +26,21 @@ public class EventController {
 
     private final EventService eventService;
 
+    @Operation(summary = "Get a list of events", description = "Allows users to get list of events.")
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
     public Set<EventResponseDTO> findAll() {
         return eventService.getEvents();
     }
 
+    @Operation(summary = "Get event by ID", description = "Allows users to get an event by vent's id.")
     @GetMapping("/{event_id}")
     @ResponseStatus(HttpStatus.OK)
     public EventResponseDTO getEvent(@PathVariable UUID event_id) {
         return eventService.getById(event_id);
     }
 
+    @Operation(summary = "Create a new event", description = "Allows admins and organizers to create a new event.")
     @PostMapping("")
     @PreAuthorize("hasAnyRole('ADMIN', 'ORGANIZER')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -44,6 +48,7 @@ public class EventController {
         return eventService.save(eventRequestDTO);
     }
 
+    @Operation(summary = "Update an event", description = "Allows tAdmins and Organizers to edit an event.")
     @PutMapping("/{event_id}/edit")
     @PreAuthorize("hasAnyRole('ADMIN', 'ORGANIZER')")
     public EventResponseDTO updateEvent(@PathVariable UUID event_id,
@@ -52,6 +57,7 @@ public class EventController {
         return eventService.update(event_id, eventRequestDTO);
     }
 
+    @Operation(summary = "Delete an event", description = "Allows admins to delete an event")
     @DeleteMapping("/{event_id}/delete")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
