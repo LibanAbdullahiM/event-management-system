@@ -34,7 +34,7 @@ public class Event extends BaseEntity {
     @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
     private String location;
-    private int capacity;
+    private Integer capacity;
     private String status;
 
     @OneToMany(mappedBy = "event")

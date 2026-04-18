@@ -3,6 +3,7 @@ package com.liban.eventmanagementsystem.services;
 import com.liban.eventmanagementsystem.auth.UserPrincipal;
 import com.liban.eventmanagementsystem.dtos.request.EventRequestDTO;
 import com.liban.eventmanagementsystem.dtos.response.EventResponseDTO;
+import com.liban.eventmanagementsystem.exceptions.ResourceNotFoundException;
 import com.liban.eventmanagementsystem.mapper.EventMapper;
 import com.liban.eventmanagementsystem.model.Event;
 import com.liban.eventmanagementsystem.model.User;
@@ -49,7 +50,7 @@ public class EventServiceImpl implements EventService {
         Optional<Event> optionalEvent = eventRepository.findById(id);
 
         if(optionalEvent.isEmpty()) {
-            throw new RuntimeException("Event not found");
+            throw new ResourceNotFoundException("Event not found");
         }
 
         return eventMapper.toEventResponseDTO(optionalEvent.get());

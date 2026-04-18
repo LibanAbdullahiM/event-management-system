@@ -4,6 +4,8 @@ import com.liban.eventmanagementsystem.auth.UserPrincipal;
 import com.liban.eventmanagementsystem.dtos.request.RoleRequestDTO;
 import com.liban.eventmanagementsystem.dtos.request.UserRequestDTO;
 import com.liban.eventmanagementsystem.dtos.response.UserResponseDTO;
+import com.liban.eventmanagementsystem.exceptions.ResourceAlreadyExistsException;
+import com.liban.eventmanagementsystem.exceptions.ResourceNotFoundException;
 import com.liban.eventmanagementsystem.mapper.UserMapper;
 import com.liban.eventmanagementsystem.model.Privilege;
 import com.liban.eventmanagementsystem.model.Role;
@@ -42,7 +44,7 @@ public class UserServicesImpl implements UserServices {
     public UserResponseDTO setRoleForUser(UUID user_id, RoleRequestDTO roleRequestDTO) {
         Optional<User> optionalUser = userRepository.findById(user_id);
         if(optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
 
         User user = optionalUser.get();
@@ -73,7 +75,7 @@ public class UserServicesImpl implements UserServices {
         Optional<User> optionalUser = userRepository.findById(user_id);
 
         if(optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
 
         return userMapper.toUserResponseDTO(optionalUser.get());
@@ -82,8 +84,12 @@ public class UserServicesImpl implements UserServices {
     @Override
     public UserResponseDTO registerUser(UserRequestDTO userRequestDTO) {
 
-        if(usernameExists(userRequestDTO.getUsername()) ||  emailExists(userRequestDTO.getEmail())) {
-            throw new RuntimeException("Username or Email already exists");
+        if(usernameExists(userRequestDTO.getUsername())) {
+            throw new ResourceAlreadyExistsException("Username already exists");
+        }
+
+        if (emailExists(userRequestDTO.getEmail())) {
+            throw new ResourceAlreadyExistsException("Email already exists");
         }
 
         User user = userMapper.toUser(userRequestDTO);
@@ -102,7 +108,7 @@ public class UserServicesImpl implements UserServices {
     public UserResponseDTO updateUser(UUID user_id, UserRequestDTO userRequestDTO) {
         Optional<User> optionalUser = userRepository.findById(user_id);
         if(optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
 
         User user = optionalUser.get();
@@ -113,6 +119,9 @@ public class UserServicesImpl implements UserServices {
         user.setLastName(userRequestDTO.getLastName());
         user.setPhoneNumber(userRequestDTO.getPhoneNumber());
 
+        //TODO UPDATE THE PASSWORD SEPARATELY.
+        user.setPassword(enncoder.encode(userRequestDTO.getPassword()));
+
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 
@@ -120,7 +129,7 @@ public class UserServicesImpl implements UserServices {
     public void deleteUser(UUID user_id) {
         Optional<User> userOptional = userRepository.findById(user_id);
         if(userOptional.isEmpty()) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
         User detachedUser = userOptional.get();
         userRepository.delete(detachedUser);

@@ -3,6 +3,7 @@ package com.liban.eventmanagementsystem.services;
 import com.liban.eventmanagementsystem.dtos.request.RegistrationRequestDTO;
 import com.liban.eventmanagementsystem.dtos.request.UserRequestDTO;
 import com.liban.eventmanagementsystem.dtos.response.RegistrationResponseDTO;
+import com.liban.eventmanagementsystem.exceptions.ResourceNotFoundException;
 import com.liban.eventmanagementsystem.mapper.RegistrationMapper;
 import com.liban.eventmanagementsystem.model.Event;
 import com.liban.eventmanagementsystem.model.Registration;
@@ -79,7 +80,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Optional<Registration> optionalRegistration = registrationRepository.findById(id);
 
         if(optionalRegistration.isEmpty()) {
-            throw new RuntimeException("Registration not found");
+            throw new ResourceNotFoundException("Registration not found");
         }
 
         registrationRepository.delete(optionalRegistration.get());

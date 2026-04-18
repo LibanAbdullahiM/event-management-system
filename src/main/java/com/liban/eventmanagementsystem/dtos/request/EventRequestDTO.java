@@ -1,10 +1,7 @@
 package com.liban.eventmanagementsystem.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,8 +16,7 @@ public class EventRequestDTO {
     @Size(min = 1, max = 255)
     private String title;
 
-    @Min(3)
-    @Max(999)
+    @Size(min = 1, max = 999, message = "Description must be between 3 and 999 characters")
     private String description;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -39,6 +35,8 @@ public class EventRequestDTO {
     @Size(min = 1, max = 255)
     private String location;
 
-    @NotBlank
-    private int capacity;
+    @NotNull(message = "Capacity is required")
+    @Min(value = 1, message = "Capacity must be at least 1")
+    @Max(value = 100, message = "Capacity must not exceed 100")
+    private Integer capacity;
 }
