@@ -5,9 +5,9 @@
 A Rest-API-based Event Management System that allows users to explore events, read event details, and register for
 participation.
 
-----
+---
 
-# Features
+## Features
 
 * User registration and authentication
 * Browse available events
@@ -15,9 +15,9 @@ participation.
 * Register for events
 * Event creation and management
 
-----
+---
 
-# System Overview
+## System Overview
 
 The system allows users to discover events and register for them, while organizers can create and manage events.
 
@@ -27,9 +27,9 @@ Core components of the system include:
 * Events – Activities available for registration 
 * Registrations – Records linking users to events
 
-----
+---
 
-# System Architecture
+## System Architecture
 
 The system follows a typical RESTful architecture.
 
@@ -39,23 +39,23 @@ Example flow:
 
 User → API Request → Controller → Service → Repository → Database
 
-----
+---
 
-# Core Entities
-##  User
+## Core Entities
+###  User
 Represents a system user.
 
 ---
-## Event
+### Event
 Represents an event that users can attend.
 
 ---
-## Registration
+### Registration
 Represents a user's registration for an event.
 
 ---
-# API Endpoints
-# Events
+## API Endpoints
+### Events
     GET /api/events
     Retrieve all events
 
@@ -71,8 +71,8 @@ Represents a user's registration for an event.
     DELETE /api/events/event_id/delete
     Delete an event
 
-----
-# Registrations
+---
+### Registrations
     GET /api/user_id/registrations
     Retrieve user registrations
 
@@ -82,8 +82,8 @@ Represents a user's registration for an event.
     DELETE /api/user_id/registrations/registration_id/delete
     Cancel registration
 
-----
-# Database Design
+---
+## Database Design
 Main tables:
 * users 
 * events 
@@ -91,31 +91,43 @@ Main tables:
 * roles 
 * privileges
 
-----
-# Technologies
+---
+## Technologies
 Example technologies used in this project:
 
-### Backend
-* Java / Spring 
+**Backend:**
+* Java 21
+* Spring Boot
+* Spring Security (JWT Authentication)
+* Spring Data JPA
+* DTO (Data Transfer Object) pattern
 * Rest API
 
-### Database 
+**Database:** 
 * PostgreSQL
 
-### Tools
-* Git 
-* Github 
+**Tools:**
+* Git / Github
+* Maven
 * Postman
 
------
+---
 
-# Future Improvements
+## Future Improvements
 * Event search and filtering 
 * Pagination for events 
 * Event capacity management 
 * Email notifications
 
------
+---
 
-# Author
-### Liban A M
+## How to Run
+1. Clone the repository: 
+    ```git clone https://github.com/LibanAbdullahiM/event-management-system.git
+2. Set up your PostgreSQL database.
+3. Configure ```application.properties``` with your database credentials
+4. Go to the project folder and Run the application: ```mvn spring-boot:run```
+
+---
+## Author
+**Liban A M**
