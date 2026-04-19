@@ -1,5 +1,6 @@
 package com.liban.eventmanagementsystem.config;
 
+import com.liban.eventmanagementsystem.exceptions.JWTAuthenticationEntryPoint;
 import com.liban.eventmanagementsystem.filter.JWTFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,11 +27,14 @@ public class SecurityConfiguration {
 
     private final UserDetailsService userDetailsService;
     private final JWTFilter jwtFilter;
+    private final JWTAuthenticationEntryPoint authenticationEntryPoint;
 
     public SecurityConfiguration(UserDetailsService userDetailsService,
-                                 JWTFilter jwtFilter) {
+                                 JWTFilter jwtFilter,
+                                 JWTAuthenticationEntryPoint authenticationEntryPoint) {
         this.userDetailsService = userDetailsService;
         this.jwtFilter = jwtFilter;
+        this.authenticationEntryPoint = authenticationEntryPoint;
     }
 
     @Bean
@@ -45,6 +49,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/events").permitAll()
                         .anyRequest().authenticated())
+                .exceptionHandling(ex ->
+                        ex.authenticationEntryPoint(authenticationEntryPoint))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider())
                 .httpBasic(Customizer.withDefaults());
