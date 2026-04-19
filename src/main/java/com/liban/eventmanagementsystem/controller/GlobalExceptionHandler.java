@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,7 +106,7 @@ public class GlobalExceptionHandler {
         return new  ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AuthorizationDeniedException.class)
+    @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> handleAuthorizationDenied(AuthorizationDeniedException ex,
                                                        HttpServletRequest request) {
         ErrorResponse response = ErrorResponse.builder()
