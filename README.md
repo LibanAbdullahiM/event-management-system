@@ -123,7 +123,7 @@ Example technologies used in this project:
 
 ## How to Run
 1. Clone the repository: 
-    ```git clone https://github.com/LibanAbdullahiM/event-management-system.git
+    ```git clone https://github.com/LibanAbdullahiM/event-management-system.git```
 2. Set up your PostgreSQL database.
 3. Configure ```application.properties``` with your database credentials
 4. Go to the project folder and Run the application: ```mvn spring-boot:run```
