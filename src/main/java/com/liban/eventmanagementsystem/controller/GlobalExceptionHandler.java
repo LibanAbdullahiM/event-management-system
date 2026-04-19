@@ -6,6 +6,7 @@ import com.liban.eventmanagementsystem.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -51,7 +52,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(UsernameNotFoundException.class)
+    @ExceptionHandler({UsernameNotFoundException.class, BadCredentialsException.class})
     public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex,
                                                              HttpServletRequest request) {
 
