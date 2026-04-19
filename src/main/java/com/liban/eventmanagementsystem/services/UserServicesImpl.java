@@ -46,14 +46,13 @@ public class UserServicesImpl implements UserServices {
     @Override
     public String verify(User user) {
 
-        Authentication auth = authManager.authenticate(new
-                UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        Authentication auth = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        user.getUsername(),
+                        user.getPassword()));
 
-        if(auth.isAuthenticated()) {
-            return jwtService.generateToken(user.getUsername());
-        }
+        return jwtService.generateToken(user.getUsername());
 
-        throw new UsernameNotFoundException("User not found");
     }
 
     @Override
