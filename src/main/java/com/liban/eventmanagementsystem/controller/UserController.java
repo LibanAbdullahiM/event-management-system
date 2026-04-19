@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,9 +25,11 @@ public class UserController {
     private final UserServices userServices;
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public Map<String, String> login(@RequestBody User user) {
 
-        return "Success with the username: " + user.getUsername() + " and password: " + user.getPassword();
+        String generatedToken = userServices.verify(user);
+
+        return Map.of("token", generatedToken);
     }
 
     @Operation(summary = "create a new account", description = "Allows users to create a new account.")

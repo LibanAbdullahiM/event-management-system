@@ -1,43 +1,59 @@
 package com.liban.eventmanagementsystem.services;
 
-import com.liban.eventmanagementsystem.auth.UserPrincipal;
 import com.liban.eventmanagementsystem.dtos.request.RoleRequestDTO;
 import com.liban.eventmanagementsystem.dtos.request.UserRequestDTO;
 import com.liban.eventmanagementsystem.dtos.response.UserResponseDTO;
 import com.liban.eventmanagementsystem.exceptions.ResourceAlreadyExistsException;
 import com.liban.eventmanagementsystem.exceptions.ResourceNotFoundException;
 import com.liban.eventmanagementsystem.mapper.UserMapper;
-import com.liban.eventmanagementsystem.model.Privilege;
 import com.liban.eventmanagementsystem.model.Role;
 import com.liban.eventmanagementsystem.repository.RoleRepository;
 import com.liban.eventmanagementsystem.repository.UserRepository;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.liban.eventmanagementsystem.model.User;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServicesImpl implements UserServices {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder enncoder;
+    private final BCryptPasswordEncoder encoder;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
+    private final AuthenticationManager authManager;
+    private final JWTService jwtService;
 
     public UserServicesImpl(UserRepository userRepository,
                             RoleRepository roleRepository,
-                            UserMapper userMapper) {
+                            UserMapper userMapper,
+                            AuthenticationManager authManager,
+                            JWTService jwtService) {
         this.userRepository = userRepository;
-        this.enncoder = new BCryptPasswordEncoder(12);
+        this.authManager = authManager;
+        this.jwtService = jwtService;
+        this.encoder = new BCryptPasswordEncoder(12);
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
+    }
+
+    @Override
+    public String verify(User user) {
+
+        Authentication auth = authManager.authenticate(new
+                UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+
+        if(auth.isAuthenticated()) {
+            return jwtService.generateToken(user.getUsername());
+        }
+
+        throw new UsernameNotFoundException("User not found");
     }
 
     @Override
@@ -94,7 +110,7 @@ public class UserServicesImpl implements UserServices {
 
         User user = userMapper.toUser(userRequestDTO);
 
-        String encodedPassword = enncoder.encode(user.getPassword());
+        String encodedPassword = encoder.encode(user.getPassword());
 
         Role role = roleRepository.findByRole("USER");
 
@@ -120,7 +136,7 @@ public class UserServicesImpl implements UserServices {
         user.setPhoneNumber(userRequestDTO.getPhoneNumber());
 
         //TODO UPDATE THE PASSWORD SEPARATELY.
-        user.setPassword(enncoder.encode(userRequestDTO.getPassword()));
+        user.setPassword(encoder.encode(userRequestDTO.getPassword()));
 
         return userMapper.toUserResponseDTO(userRepository.save(user));
     }

@@ -29,4 +29,5 @@ public interface UserServices {
 
     UserResponseDTO getUserById(UUID user_id);
 
+    String verify(User user);
 }
