@@ -3,6 +3,7 @@ package com.liban.eventmanagementsystem.services;
 import com.liban.eventmanagementsystem.auth.UserPrincipal;
 import com.liban.eventmanagementsystem.dtos.request.EventRequestDTO;
 import com.liban.eventmanagementsystem.dtos.response.EventResponseDTO;
+import com.liban.eventmanagementsystem.exceptions.ResourceOwnershipException;
 import com.liban.eventmanagementsystem.exceptions.ResourceNotFoundException;
 import com.liban.eventmanagementsystem.mapper.EventMapper;
 import com.liban.eventmanagementsystem.model.Event;
@@ -12,12 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -89,11 +88,7 @@ public class EventServiceImpl implements EventService {
         User created_user = event.getCreatedBy();
 
         if(!user.equals(created_user)) {
-            try {
-                throw new IllegalAccessException("You are not allowed to update this event");
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            throw new ResourceOwnershipException("You are not allowed to update this event");
         }
 
         event.setTitle(eventRequestDTO.getTitle());

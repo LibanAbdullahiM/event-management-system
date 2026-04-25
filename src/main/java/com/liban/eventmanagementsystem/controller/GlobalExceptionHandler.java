@@ -3,6 +3,7 @@ package com.liban.eventmanagementsystem.controller;
 import com.liban.eventmanagementsystem.exceptions.ErrorResponse;
 import com.liban.eventmanagementsystem.exceptions.ResourceAlreadyExistsException;
 import com.liban.eventmanagementsystem.exceptions.ResourceNotFoundException;
+import com.liban.eventmanagementsystem.exceptions.ResourceOwnershipException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +39,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(IllegalAccessException.class)
-    public ResponseEntity<?> handleIllegalAccessException(IllegalAccessException ex,
+    @ExceptionHandler(ResourceOwnershipException.class)
+    public ResponseEntity<?> handleIllegalAccessException(ResourceOwnershipException ex,
                                                           HttpServletRequest request) {
 
         ErrorResponse response = ErrorResponse.builder()
