@@ -21,7 +21,7 @@ public class EventResponseDTO {
     private LocalTime StartTime;
     private LocalTime EndTime;
     private String location;
-    private String capacity;
+    private Integer capacity;
     private String status;
 
     private UUID createdByUserId;

@@ -20,6 +20,7 @@ import java.util.Set;
 public class Event extends BaseEntity {
 
     private String title;
+    @Column(length = 1000)
     private String description;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
