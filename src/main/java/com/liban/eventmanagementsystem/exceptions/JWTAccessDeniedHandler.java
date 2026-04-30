@@ -1,6 +1,7 @@
 package com.liban.eventmanagementsystem.exceptions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,6 +33,7 @@ public class JWTAccessDeniedHandler implements AccessDeniedHandler {
                 .build();
 
         ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
         response.getWriter().write(mapper.writeValueAsString(error));
     }
 }

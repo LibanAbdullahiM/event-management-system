@@ -108,7 +108,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<?> handleAuthorizationDenied(AuthorizationDeniedException ex,
+    public ResponseEntity<?> handleAuthorizationDenied(AccessDeniedException ex,
                                                        HttpServletRequest request) {
         ErrorResponse response = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
