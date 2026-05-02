@@ -27,6 +27,7 @@ public class RegistrationController {
 
     @Operation(summary = "register to an event", description = "Allows the users to register an event.")
     @PostMapping("/{event_id}/register")
+    @ResponseStatus(HttpStatus.CREATED)
     public RegistrationResponseDTO createRegistration(@PathVariable UUID user_id,
                                                       @PathVariable UUID event_id,
                                                       @Valid @RequestBody RegistrationRequestDTO registrationRequestDTO) {
