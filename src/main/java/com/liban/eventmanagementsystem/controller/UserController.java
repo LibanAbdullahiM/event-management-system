@@ -34,6 +34,7 @@ public class UserController {
 
     @Operation(summary = "create a new account", description = "Allows users to create a new account.")
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDTO register(@Valid @RequestBody UserRequestDTO userRequestDTO) {
 
         return userServices.registerUser(userRequestDTO);
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @Operation(summary = "Delete an account", description = "Allows the users to delete their account.")
-    @DeleteMapping("/{user_id}/delete")
+    @DeleteMapping("/users/{user_id}/delete")
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable UUID  user_id) {
         userServices.deleteUser(user_id);
@@ -62,7 +63,7 @@ public class UserController {
     }
 
     @Operation(summary = "Get user by ID", description = "Allows Admins to get user by ID.")
-    @GetMapping("/{user_id}")
+    @GetMapping("/users/{user_id}")
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponseDTO getUserById(@PathVariable UUID user_id) {
 
@@ -70,7 +71,7 @@ public class UserController {
     }
 
     @Operation(summary = "Set role to user", description = "Allows Admins to give users a role.")
-    @PostMapping("/{user_id}/set_role")
+    @PostMapping("/users/{user_id}/set_role")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public UserResponseDTO setRoleForUser(@PathVariable UUID  user_id,
